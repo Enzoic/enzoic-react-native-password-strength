@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Animated, Easing, Dimensions } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
 import strings from './strings/passwordping_strings';
@@ -10,9 +10,7 @@ import md5 from './hashes/md5';
 export default class PasswordPing extends Component {
   static propTypes = {
     changeCallback: PropTypes.func,
-    className: PropTypes.string,
     defaultValue: PropTypes.string,
-    inputProps: PropTypes.object,
     minLength: PropTypes.number,
     minScore: PropTypes.number,
     scoreWords: PropTypes.array,
@@ -23,15 +21,11 @@ export default class PasswordPing extends Component {
 
   static defaultProps = {
     changeCallback: null,
-    className: '',
     defaultValue: '',
     minLength: 8,
     minScore: 4,
     tooShortWord: 'Too Short',
-    userInputs: [],
-    requireSymbol: false,
-    requireUppercase: false,
-    requireNumber: false
+    userInputs: []
   };
 
   state = {
@@ -99,13 +93,11 @@ export default class PasswordPing extends Component {
   handleChange(password) {
     const {changeCallback, minScore} = this.props;
 
-    this.setState({
-      password
-    });
+    this.setState({ password });
+
     if (this.isTooShort(password) === false) {
       this.checkPasswordWhenReady(password);
-    }
-    else {
+    } else {
       // if password is too, short set a score of 1
       const score = 1;
       this.setState({
@@ -127,13 +119,10 @@ export default class PasswordPing extends Component {
     // wait for zxcvbn to be loaded
     if (isZxcvbnLoaded() === true) {
       this.checkPassword(passwordToCheck);
-    }
-    else {
+    } else {
       setTimeout(this.checkPasswordWhenReady.bind(this, passwordToCheck), 500);
 
-      this.setState({
-        loading: true,
-      });
+      this.setState({ loading: true });
     }
   }
 
@@ -146,7 +135,6 @@ export default class PasswordPing extends Component {
 
     const zxcvbnResult = zxcvbn(passwordToCheck, this.props.userInputs);
     const zxcvbnScore = zxcvbnResult.score + 1;
-
 
     // store zxcvbn results and set state to loading while PasswordPing check is processing
     this.setState({
@@ -228,11 +216,10 @@ export default class PasswordPing extends Component {
       this.ppCurrentRequest.open('GET',
         `${this.apiURL}/passwords?partial_sha2=${sha2partial}&partial_sha1=${sha1partial}&partial_md5=${md5partial}`,
         true);
-      this.ppCurrentRequest.setRequestHeader("Authorization", "Basic " + btoa("d7f84daff45045e080e62e8f7eb6a9c7:=UuTmZEDrW6c8XBkTZyrZ94NHt1p3pk*"));
+      this.ppCurrentRequest.setRequestHeader('Origin', AppRegistry.getAppKeys()[0]);
       this.ppCurrentRequest.timeout = 1500;
       this.ppCurrentRequest.send();
-    }
-    else {
+    } else {
       this.setState({loading: false});
     }
   }
@@ -243,34 +230,26 @@ export default class PasswordPing extends Component {
 
   onLayout = event => {
     if (this.state.dimensions) return // layout was already called
-    let {width} = event.nativeEvent.layout
-    this.setState({width})
+    let { width } = event.nativeEvent.layout
+    this.setState({ width })
   }
 
   render() {
     const {score, password, isValid, loading} = this.state;
-
-    const {
-      scoreWords,
-      inputProps,
-      className,
-      style,
-      tooShortWord
-    } = this.props;
+    const { scoreWords, style, tooShortWord, minLength, onChangeText } = this.props;
 
     let backgroundColor;
     if (score < 3) {
-      backgroundColor = {backgroundColor: "red"};
+      backgroundColor = {backgroundColor: "#FF0000"};
     } else if (score === 3) {
-      backgroundColor = {backgroundColor: "skyblue"};
+      backgroundColor = {backgroundColor: "#57B8FF"};
     } else {
-      backgroundColor = {backgroundColor: "green"};
+      backgroundColor = {backgroundColor: "#2FBF71"};
     }
 
     let padding;
     if (password.length === 0) {
       padding = {padding: 0};
-      scoreClass = "";
     } else {
       padding = {padding: 6};
     }
@@ -278,10 +257,10 @@ export default class PasswordPing extends Component {
     const width = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: [0, this.state.width]
-    });
+    })
 
     return (
-      <View onLayout={this.onLayout}>
+      <View style={style} onLayout={this.onLayout}>
         <View style={styles.main}>
           <TextInput
             placeholder="New Password"
@@ -293,13 +272,13 @@ export default class PasswordPing extends Component {
             autoCorrect={false}
             onChangeText={(text) => {
               this.handleChange(text)
-              this.props.onChangeText();
+              onChangeText();
             }}
             value={password}
           />
           {!loading &&
             <View style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)}>
-              <Text style={styles.scoreText}>{(password.length < this.props.minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
+              <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
             </View>
           }
           {loading &&
