@@ -272,7 +272,7 @@ export default class PasswordPing extends Component {
             autoCorrect={false}
             onChangeText={(text) => {
               this.handleChange(text)
-              onChangeText();
+              onChangeText(text);
             }}
             value={password}
           />
