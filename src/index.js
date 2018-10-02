@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
 import strings from './strings/passwordping_strings';
@@ -29,8 +29,8 @@ export default class PasswordPing extends Component {
   };
 
   state = {
-    score: 1,
-    zxcvbnScore: 1,
+    score: 0,
+    zxcvbnScore: 0,
     zxcvbnResult: null,
     isValid: false,
     password: '',
@@ -94,6 +94,15 @@ export default class PasswordPing extends Component {
     const {changeCallback, minScore} = this.props;
 
     this.setState({ password });
+
+    if (password === "") {
+      this.setState({
+        score: 0,
+        zxcvbnScore: 0
+      })
+      this.animate(0);
+      return;
+    }
 
     if (this.isTooShort(password) === false) {
       this.checkPasswordWhenReady(password);
@@ -254,7 +263,7 @@ export default class PasswordPing extends Component {
       padding = {padding: 6};
     }
 
-    const width = this.animatedValue.interpolate({
+    let width = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: [0, this.state.width]
     })
@@ -276,8 +285,14 @@ export default class PasswordPing extends Component {
             }}
             value={password}
           />
-          {!loading &&
-            <View style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)}>
+          {(score === 0 && password !== "") ?
+            !loading && <View style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)}>
+              <Image source={require('./warning.png')} style={{marginRight: 2}} />
+              <Text style={styles.scoreText}>Hacked</Text>
+              <Image source={require('./warning.png')} style={{marginLeft: 2}} />
+            </View>
+            :
+            !loading && <View style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)}>
               <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
             </View>
           }
@@ -307,16 +322,19 @@ const styles = {
     fontSize: 17,
     textAlign: "center",
     flex: 1,
-    padding: 10
+    padding: 10,
+    backgroundColor: "transparent"
   },
   scoreTextContainer: {
+    flexDirection: "row",
     borderRadius: 15,
   },
   scoreText: {
     fontSize: 12,
     color: "white",
     right: 0,
-    textAlign: "center"
+    textAlign: "center",
+    backgroundColor: "transparent"
   },
   scoreUnderline: {
     position: "absolute",
