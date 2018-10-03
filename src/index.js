@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
 import strings from './strings/passwordping_strings';
@@ -294,7 +294,7 @@ export default class PasswordPing extends Component {
     if (password.length === 0) {
       padding = {padding: 0};
     } else {
-      padding = {padding: 6};
+      padding = {padding: 4};
     }
 
     let width = this.animatedValue.interpolate({
@@ -333,7 +333,7 @@ export default class PasswordPing extends Component {
                 placement="auto"
                 onClose={() => this.setState({ modalOpen: false })}
               >
-                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)} onPress={() => {
+                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
                   <Image source={require('./warning.png')} style={{marginRight: 2}} />
@@ -352,7 +352,7 @@ export default class PasswordPing extends Component {
                 placement="auto"
                 onClose={() => this.setState({ modalOpen: false })}
               >
-                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)} onPress={() => {
+                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
                   <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
@@ -392,7 +392,7 @@ const styles = {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 15,
+    borderRadius: 10,
   },
   scoreText: {
     fontSize: 12,
