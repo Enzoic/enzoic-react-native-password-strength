@@ -308,6 +308,7 @@ export default class PasswordPing extends Component {
       <View style={style} onLayout={this.onLayout}>
         <View style={styles.main}>
           <TextInput
+            underlineColorAndroid="transparent"
             placeholder="New Password"
             placeholderTextColor="#b0b0b0"
             style={styles.input}
