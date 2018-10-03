@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
 import strings from './strings/passwordping_strings';
 import sha1 from './hashes/sha1';
 import sha256 from './hashes/sha256';
 import md5 from './hashes/md5';
+import Tooltip from 'react-native-walkthrough-tooltip';
 
 export default class PasswordPing extends Component {
   static propTypes = {
@@ -233,6 +234,39 @@ export default class PasswordPing extends Component {
     }
   }
 
+  static getMessageFromZXCVBNResult(zxcvbnresult) {
+    let message = '';
+    let numLines = 0;
+
+    if (zxcvbnresult && zxcvbnresult.feedback) {
+      if (zxcvbnresult.feedback.warning) {
+        message += zxcvbnresult.feedback.warning+ "\n";;
+        numLines++;
+      }
+
+      if (zxcvbnresult.feedback.suggestions.length > 0) {
+        message += strings.suggestion + ":\n";
+        numLines++;
+        for (let i = 0; i < zxcvbnresult.feedback.suggestions.length; i++) {
+          message += zxcvbnresult.feedback.suggestions[i] + "\n";
+          numLines++;
+        }
+      }
+    }
+    return {message: message, numLines: numLines};
+  }
+
+  static getScoreTooltip(score, zxcvbnresult) {
+    if (!zxcvbnresult) return null;
+    if (score === 0) {
+      return <Text>{strings.breachedPasswordMessage}</Text>;
+    }
+    else if (score < 4) {
+      return <Text>{PasswordPing.getMessageFromZXCVBNResult(zxcvbnresult).message}</Text>;
+    }
+    return null;
+  }
+
   isTooShort(password) {
     return password.length < this.props.minLength;
   }
@@ -244,7 +278,7 @@ export default class PasswordPing extends Component {
   }
 
   render() {
-    const {score, password, isValid, loading} = this.state;
+    const { score, password, isValid, loading } = this.state;
     const { scoreWords, style, tooShortWord, minLength, onChangeText } = this.props;
 
     let backgroundColor;
@@ -268,6 +302,8 @@ export default class PasswordPing extends Component {
       outputRange: [0, this.state.width]
     })
 
+    const scoreTooltip = PasswordPing.getScoreTooltip(score, this.state.zxcvbnResult);
+
     return (
       <View style={style} onLayout={this.onLayout}>
         <View style={styles.main}>
@@ -286,15 +322,39 @@ export default class PasswordPing extends Component {
             value={password}
           />
           {(score === 0 && password !== "") ?
-            !loading && <View style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)}>
-              <Image source={require('./warning.png')} style={{marginRight: 2}} />
-              <Text style={styles.scoreText}>Hacked</Text>
-              <Image source={require('./warning.png')} style={{marginLeft: 2}} />
-            </View>
+            !loading &&
+              <Tooltip
+                animated
+                isVisible={this.state.modalOpen}
+                displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
+                content={scoreTooltip}
+                placement="auto"
+                onClose={() => this.setState({ modalOpen: false })}
+              >
+                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)} onPress={() => {
+                  if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
+                }}>
+                  <Image source={require('./warning.png')} style={{marginRight: 2}} />
+                  <Text style={styles.scoreText}>Hacked</Text>
+                  <Image source={require('./warning.png')} style={{marginLeft: 2}} />
+                </TouchableOpacity>
+              </Tooltip>
             :
-            !loading && <View style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)}>
-              <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
-            </View>
+            !loading &&
+              <Tooltip
+                animated
+                isVisible={this.state.modalOpen}
+                displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
+                content={scoreTooltip}
+                placement="top"
+                onClose={() => this.setState({ modalOpen: false })}
+              >
+                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)} onPress={() => {
+                  if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
+                }}>
+                  <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
+                </TouchableOpacity>
+              </Tooltip>
           }
           {loading &&
             <View style={{paddingHorizontal: 15}}>
