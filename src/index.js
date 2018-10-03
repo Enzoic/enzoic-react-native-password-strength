@@ -259,10 +259,10 @@ export default class PasswordPing extends Component {
   static getScoreTooltip(score, zxcvbnresult) {
     if (!zxcvbnresult) return null;
     if (score === 0) {
-      return <Text>{strings.breachedPasswordMessage}</Text>;
+      return <Text style={{color: "black"}}>{strings.breachedPasswordMessage}</Text>;
     }
     else if (score < 4) {
-      return <Text>{PasswordPing.getMessageFromZXCVBNResult(zxcvbnresult).message}</Text>;
+      return <Text style={{color: "black"}}>{PasswordPing.getMessageFromZXCVBNResult(zxcvbnresult).message}</Text>;
     }
     return null;
   }
@@ -325,6 +325,7 @@ export default class PasswordPing extends Component {
           {(score === 0 && password !== "") ?
             !loading &&
               <Tooltip
+                backgroundColor="black"
                 animated
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
@@ -343,11 +344,12 @@ export default class PasswordPing extends Component {
             :
             !loading &&
               <Tooltip
+                backgroundColor="black"
                 animated
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
                 content={scoreTooltip}
-                placement="top"
+                placement="auto"
                 onClose={() => this.setState({ modalOpen: false })}
               >
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding)} onPress={() => {
@@ -388,6 +390,8 @@ const styles = {
   },
   scoreTextContainer: {
     flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 15,
   },
   scoreText: {
@@ -399,7 +403,7 @@ const styles = {
   },
   scoreUnderline: {
     position: "absolute",
-    bottom: -4,
+    bottom: -2,
     height: 4,
   }
 };
