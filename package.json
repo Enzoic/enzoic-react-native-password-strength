@@ -7,7 +7,8 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react-native-walkthrough-tooltip": "^0.2.0"
   },
   "deprecated": false,
   "description": "PasswordPing password strength meter control for use in React Native projects",
@@ -19,8 +20,7 @@
     "babel-preset-react-native": "^4.0.0",
     "babel-preset-stage-2": "^6.24.1",
     "react": "^16.1.1",
-    "react-native": "0.53.0",
-    "react-native-walkthrough-tooltip": "^0.2.0"
+    "react-native": "0.53.0"
   },
   "engines": {
     "node": ">6.11.1"
