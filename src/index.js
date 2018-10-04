@@ -325,7 +325,7 @@ export default class PasswordPing extends Component {
           {(score === 0 && password !== "") ?
             !loading &&
               <Tooltip
-                backgroundColor="black"
+                backgroundColor="#000000aa"
                 animated
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
@@ -336,15 +336,15 @@ export default class PasswordPing extends Component {
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
-                  <Image source={require('./warning.png')} style={{marginRight: 2}} />
+                  <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
                   <Text style={styles.scoreText}>Hacked</Text>
-                  <Image source={require('./warning.png')} style={{marginLeft: 2}} />
+                  <Image source={require('./assets/warning.png')} style={{marginLeft: 2}} />
                 </TouchableOpacity>
               </Tooltip>
             :
             !loading &&
               <Tooltip
-                backgroundColor="black"
+                backgroundColor="#000000aa"
                 animated
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
@@ -355,6 +355,7 @@ export default class PasswordPing extends Component {
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
+                  {password.length > minLength && <Image source={require('./assets/info.png')} style={{marginRight: 2}} />}
                   <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
                 </TouchableOpacity>
               </Tooltip>
@@ -407,7 +408,3 @@ const styles = {
     height: 4,
   }
 };
-
-
-
-
