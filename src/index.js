@@ -355,7 +355,7 @@ export default class PasswordPing extends Component {
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
-                  {password.length > minLength && <Image source={require('./assets/info.png')} style={{marginRight: 2}} />}
+                  {password.length > minLength && score !== 4 && score !== 5 && <Image source={require('./assets/info.png')} style={{marginRight: 2}} />}
                   <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
                 </TouchableOpacity>
               </Tooltip>
