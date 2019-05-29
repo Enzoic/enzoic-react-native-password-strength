@@ -366,7 +366,7 @@ export default class PasswordPing extends Component {
             </View>
           }
         </View>
-        <Animated.View style={Object.assign({}, styles.scoreUnderline, {width}, backgroundColor)} />
+        <Animated.View style={Object.assign({}, styles.scoreUnderline, {...width}, backgroundColor)} />
       </View>
     )
   }
