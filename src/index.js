@@ -8,7 +8,7 @@ import sha256 from './hashes/sha256';
 import md5 from './hashes/md5';
 import Tooltip from 'react-native-walkthrough-tooltip';
 
-export default class Enzoic extends Component {
+class Enzoic extends Component {
   static propTypes = {
     changeCallback: PropTypes.func,
     defaultValue: PropTypes.string,
@@ -64,7 +64,7 @@ export default class Enzoic extends Component {
   }
 
   animate (value) {
-    this.animatedValue.setValue(0)
+    this.animatedValue.setValue(0);
     Animated.timing(
       this.animatedValue,
       {
@@ -100,7 +100,7 @@ export default class Enzoic extends Component {
       this.setState({
         score: 0,
         zxcvbnScore: 0
-      })
+      });
       this.animate(0);
       return;
     }
@@ -240,7 +240,7 @@ export default class Enzoic extends Component {
 
     if (zxcvbnresult && zxcvbnresult.feedback) {
       if (zxcvbnresult.feedback.warning) {
-        message += zxcvbnresult.feedback.warning+ "\n";;
+        message += zxcvbnresult.feedback.warning+ "\n";
         numLines++;
       }
 
@@ -272,13 +272,13 @@ export default class Enzoic extends Component {
   }
 
   onLayout = event => {
-    if (this.state.dimensions) return // layout was already called
-    let { width } = event.nativeEvent.layout
+    if (this.state.dimensions) return; // layout was already called
+    let { width } = event.nativeEvent.layout;
     this.setState({ width })
-  }
+  };
 
   render() {
-    const { score, password, isValid, loading } = this.state;
+    const { score, password, loading } = this.state;
     const { scoreWords, style, tooShortWord, minLength, onChangeText } = this.props;
 
     let backgroundColor;
@@ -300,7 +300,7 @@ export default class Enzoic extends Component {
     let width = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: [0, this.state.width]
-    })
+    });
 
     const scoreTooltip = Enzoic.getScoreTooltip(score, this.state.zxcvbnResult);
 
@@ -317,7 +317,7 @@ export default class Enzoic extends Component {
             autoCapitalize="none"
             autoCorrect={false}
             onChangeText={(text) => {
-              this.handleChange(text)
+              this.handleChange(text);
               onChangeText(text);
             }}
             value={password}
@@ -366,7 +366,7 @@ export default class Enzoic extends Component {
             </View>
           }
         </View>
-        <Animated.View style={Object.assign({}, styles.scoreUnderline, {width}, backgroundColor)} />
+        <Animated.View style={Object.assign({}, styles.scoreUnderline, {...width}, backgroundColor)} />
       </View>
     )
   }
