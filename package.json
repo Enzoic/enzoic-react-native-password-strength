@@ -1,11 +1,12 @@
 {
+  "name": "@enzoic/enzoic-react-native-password-strength",
+  "version": "1.0.1",
   "author": {
     "name": "Enzoic"
   },
   "bugs": {
     "url": "https://github.com/enzoic/enzoic-react-native-password-strength/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "prop-types": "^15.6.0",
     "react-native-walkthrough-tooltip": "^0.2.0"
@@ -31,7 +32,6 @@
   ],
   "license": "MIT",
   "main": "src/index.js",
-  "name": "enzoic-react-native-password-strength",
   "peerDependencies": {
     "react": "^16.0.0",
     "react-native": "0.53.0"
@@ -39,6 +39,5 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/enzoic/enzoic-react-native-password-strength.git"
-  },
-  "version": "1.0.0"
+  }
 }
