@@ -8,7 +8,7 @@ import sha256 from './hashes/sha256';
 import md5 from './hashes/md5';
 import Tooltip from 'react-native-walkthrough-tooltip';
 
-class Enzoic extends Component {
+export default class Enzoic extends Component {
   static propTypes = {
     changeCallback: PropTypes.func,
     defaultValue: PropTypes.string,
