@@ -330,7 +330,7 @@ export default class Enzoic extends Component {
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
                 content={scoreTooltip}
-                placement="auto"
+                placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
               >
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
@@ -349,7 +349,7 @@ export default class Enzoic extends Component {
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
                 content={scoreTooltip}
-                placement="auto"
+                placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
               >
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
@@ -366,7 +366,7 @@ export default class Enzoic extends Component {
             </View>
           }
         </View>
-        <Animated.View style={Object.assign({}, styles.scoreUnderline, {width}, backgroundColor)} />
+        <Animated.View style={Object.assign({}, styles.scoreUnderline, {...width}, backgroundColor)} />
       </View>
     )
   }
