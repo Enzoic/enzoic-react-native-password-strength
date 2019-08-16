@@ -34,7 +34,7 @@
     "react"
   ],
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "peerDependencies": {
     "react": "^16.0.0",
     "react-native": "0.53.0"
