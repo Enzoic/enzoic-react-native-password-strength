@@ -6,7 +6,7 @@ module.exports = {
     "react-dom": "react-dom"
   },
   output: {
-    filename: "../dist/index.js",
+    filename: "./dist/index.js",
     library: "EnzoicReactNativePasswordMeter",
     libraryTarget: "umd",
     path: __dirname
