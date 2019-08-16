@@ -1,17 +1,18 @@
 {
+  "name": "@enzoic/enzoic-react-native-password-strength",
+  "version": "1.0.4",
   "author": {
-    "name": "PasswordPing"
+    "name": "Enzoic"
   },
   "bugs": {
-    "url": "https://github.com/passwordping/passwordping-react-native-password-strength/issues"
+    "url": "https://github.com/enzoic/enzoic-react-native-password-strength/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "prop-types": "^15.6.0",
-    "react-native-walkthrough-tooltip": "^0.2.0"
+    "react-native-walkthrough-tooltip": "^0.5.3"
   },
   "deprecated": false,
-  "description": "PasswordPing password strength meter control for use in React Native projects",
+  "description": "Enzoic password strength meter control for use in React Native projects",
   "devDependencies": {
     "babel-core": "^6.11.4",
     "babel-loader": "^6.2.4",
@@ -20,25 +21,23 @@
     "babel-preset-react-native": "^4.0.0",
     "babel-preset-stage-2": "^6.24.1",
     "react": "^16.1.1",
-    "react-native": "0.53.0"
+    "react-native": "^0.60.4"
   },
   "engines": {
     "node": ">6.11.1"
   },
-  "homepage": "https://github.com/passwordping/passwordping-react-native-password-strength#readme",
+  "homepage": "https://github.com/enzoic/enzoic-react-native-password-strength#readme",
   "keywords": [
     "react"
   ],
   "license": "MIT",
   "main": "src/index.js",
-  "name": "passwordping-react-native-password-strength",
   "peerDependencies": {
     "react": "^16.0.0",
     "react-native": "0.53.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/passwordping/passwordping-react-native-password-strength.git"
-  },
-  "version": "1.0.0"
+    "url": "git+https://github.com/enzoic/enzoic-react-native-password-strength.git"
+  }
 }

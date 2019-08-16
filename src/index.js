@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
-import strings from './strings/passwordping_strings';
+import strings from './strings/enzoic_strings';
 import sha1 from './hashes/sha1';
 import sha256 from './hashes/sha256';
 import md5 from './hashes/md5';
 import Tooltip from 'react-native-walkthrough-tooltip';
 
-export default class PasswordPing extends Component {
+export default class Enzoic extends Component {
   static propTypes = {
     changeCallback: PropTypes.func,
     defaultValue: PropTypes.string,
@@ -47,10 +47,10 @@ export default class PasswordPing extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.checkPasswordWhenReady = this.checkPasswordWhenReady.bind(this);
     this.checkPassword = this.checkPassword.bind(this);
-    this.checkPasswordAgainstPasswordPing = this.checkPasswordAgainstPasswordPing.bind(this);
+    this.checkPasswordAgainstEnzoic = this.checkPasswordAgainstEnzoic.bind(this);
     this.isTooShort = this.isTooShort.bind(this);
 
-    this.apiURL = 'https://api.passwordping.com';
+    this.apiURL = 'https://api.enzoic.com';
     this.animatedValue = new Animated.Value(0)
   }
 
@@ -64,7 +64,7 @@ export default class PasswordPing extends Component {
   }
 
   animate (value) {
-    this.animatedValue.setValue(0)
+    this.animatedValue.setValue(0);
     Animated.timing(
       this.animatedValue,
       {
@@ -100,7 +100,7 @@ export default class PasswordPing extends Component {
       this.setState({
         score: 0,
         zxcvbnScore: 0
-      })
+      });
       this.animate(0);
       return;
     }
@@ -141,12 +141,12 @@ export default class PasswordPing extends Component {
       clearTimeout(this.checkTimer);
     }
 
-    this.checkTimer = setTimeout(this.checkPasswordAgainstPasswordPing.bind(this, passwordToCheck), 500);
+    this.checkTimer = setTimeout(this.checkPasswordAgainstEnzoic.bind(this, passwordToCheck), 500);
 
     const zxcvbnResult = zxcvbn(passwordToCheck, this.props.userInputs);
     const zxcvbnScore = zxcvbnResult.score + 1;
 
-    // store zxcvbn results and set state to loading while PasswordPing check is processing
+    // store zxcvbn results and set state to loading while Enzoic check is processing
     this.setState({
       isValid: this.state.score >= this.props.minScore,
       score: this.state.score,
@@ -156,7 +156,7 @@ export default class PasswordPing extends Component {
     });
   }
 
-  checkPasswordAgainstPasswordPing(passwordToCheck) {
+  checkPasswordAgainstEnzoic(passwordToCheck) {
     // if we already had an outstanding request in progress, cancel
     if (this.ppCurrentRequest) {
       this.ppCurrentRequest.abort();
@@ -240,7 +240,7 @@ export default class PasswordPing extends Component {
 
     if (zxcvbnresult && zxcvbnresult.feedback) {
       if (zxcvbnresult.feedback.warning) {
-        message += zxcvbnresult.feedback.warning+ "\n";;
+        message += zxcvbnresult.feedback.warning+ "\n";
         numLines++;
       }
 
@@ -262,7 +262,7 @@ export default class PasswordPing extends Component {
       return <Text style={{color: "black"}}>{strings.breachedPasswordMessage}</Text>;
     }
     else if (score < 4) {
-      return <Text style={{color: "black"}}>{PasswordPing.getMessageFromZXCVBNResult(zxcvbnresult).message}</Text>;
+      return <Text style={{color: "black"}}>{Enzoic.getMessageFromZXCVBNResult(zxcvbnresult).message}</Text>;
     }
     return null;
   }
@@ -272,13 +272,13 @@ export default class PasswordPing extends Component {
   }
 
   onLayout = event => {
-    if (this.state.dimensions) return // layout was already called
-    let { width } = event.nativeEvent.layout
+    if (this.state.dimensions) return; // layout was already called
+    let { width } = event.nativeEvent.layout;
     this.setState({ width })
-  }
+  };
 
   render() {
-    const { score, password, isValid, loading } = this.state;
+    const { score, password, loading } = this.state;
     const { scoreWords, style, tooShortWord, minLength, onChangeText } = this.props;
 
     let backgroundColor;
@@ -300,9 +300,9 @@ export default class PasswordPing extends Component {
     let width = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: [0, this.state.width]
-    })
+    });
 
-    const scoreTooltip = PasswordPing.getScoreTooltip(score, this.state.zxcvbnResult);
+    const scoreTooltip = Enzoic.getScoreTooltip(score, this.state.zxcvbnResult);
 
     return (
       <View style={style} onLayout={this.onLayout}>
@@ -317,7 +317,7 @@ export default class PasswordPing extends Component {
             autoCapitalize="none"
             autoCorrect={false}
             onChangeText={(text) => {
-              this.handleChange(text)
+              this.handleChange(text);
               onChangeText(text);
             }}
             value={password}
@@ -330,7 +330,7 @@ export default class PasswordPing extends Component {
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
                 content={scoreTooltip}
-                placement="auto"
+                placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
               >
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
@@ -349,7 +349,7 @@ export default class PasswordPing extends Component {
                 isVisible={this.state.modalOpen}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
                 content={scoreTooltip}
-                placement="auto"
+                placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
               >
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
