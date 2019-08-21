@@ -30,7 +30,8 @@ module.exports = {
       {
         test: /\.(png|jpg|gif)$/,
         loader: "url-loader"
-      }
+      },
+      { test: /\.css$/, loader: "style-loader!css-loader" }
     ]
   }
 };
