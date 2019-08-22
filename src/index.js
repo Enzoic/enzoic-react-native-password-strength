@@ -338,9 +338,9 @@ export default class Enzoic extends Component {
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
-                  <Image source={WarningImage} style={{marginRight: 2}} />
+                  <Image source={{uri: WarningImage}} style={{marginRight: 2, width: 12, height: 12}} />
                   <Text style={styles.scoreText}>Hacked</Text>
-                  <Image source={WarningImage} style={{marginLeft: 2}} />
+                  <Image source={{uri: WarningImage}} style={{marginLeft: 2, width: 12, height: 12}} />
                 </TouchableOpacity>
               </Tooltip>
             :
@@ -357,7 +357,7 @@ export default class Enzoic extends Component {
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
-                  {password.length > minLength && score !== 4 && score !== 5 && <Image source={InfoImage} style={{marginRight: 2}} />}
+                  {password.length > minLength && score !== 4 && score !== 5 && <Image source={{uri: InfoImage}} style={{marginRight: 2, width: 12, height: 12}} />}
                   <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
                 </TouchableOpacity>
               </Tooltip>
