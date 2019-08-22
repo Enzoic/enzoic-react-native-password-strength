@@ -7,6 +7,8 @@ import sha1 from './hashes/sha1';
 import sha256 from './hashes/sha256';
 import md5 from './hashes/md5';
 import Tooltip from 'react-native-walkthrough-tooltip';
+import WarningImage from './assets/warning.png';
+import InfoImage from './assets/info.png';
 
 export default class Enzoic extends Component {
   static propTypes = {
@@ -336,9 +338,9 @@ export default class Enzoic extends Component {
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
-                  <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
+                  <Image source={WarningImage} style={{marginRight: 2}} />
                   <Text style={styles.scoreText}>Hacked</Text>
-                  <Image source={require('./assets/warning.png')} style={{marginLeft: 2}} />
+                  <Image source={WarningImage} style={{marginLeft: 2}} />
                 </TouchableOpacity>
               </Tooltip>
             :
@@ -355,7 +357,7 @@ export default class Enzoic extends Component {
                 <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
                   if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                 }}>
-                  {password.length > minLength && score !== 4 && score !== 5 && <Image source={require('./assets/info.png')} style={{marginRight: 2}} />}
+                  {password.length > minLength && score !== 4 && score !== 5 && <Image source={InfoImage} style={{marginRight: 2}} />}
                   <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
                 </TouchableOpacity>
               </Tooltip>
