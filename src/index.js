@@ -119,10 +119,10 @@ export default class Enzoic extends Component {
         zxcvbnResult: null,
         loading: false
       }, () => {
-        this.animate(score/5);
-        if (changeCallback !== null) {
-          changeCallback(this.state, null);
-        }
+        // this.animate(score/5);
+        // if (changeCallback !== null) {
+        //   changeCallback(this.state, null);
+        // }
       });
     }
   }
@@ -193,10 +193,10 @@ export default class Enzoic extends Component {
                       isValid: false,
                       loading: false
                     }, () => {
-                      this.animate(0.2);
-                      if (this.props.changeCallback !== null) {
-                        this.props.changeCallback(this.state, this.state.zxcvbnResult);
-                      }
+                      // this.animate(0.2);
+                      // if (this.props.changeCallback !== null) {
+                      //   this.props.changeCallback(this.state, this.state.zxcvbnResult);
+                      // }
                     });
                     found = true;
                     break;
