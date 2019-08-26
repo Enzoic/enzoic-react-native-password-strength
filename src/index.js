@@ -110,7 +110,7 @@ export default class Enzoic extends Component {
     if (this.isTooShort(password) === false) {
       this.checkPasswordWhenReady(password);
     } else {
-      // if password is too, short set a score of 1
+      // if password is too short set a score of 1
       const score = 1;
       this.setState({
         isValid: score >= minScore,

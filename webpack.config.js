@@ -17,12 +17,13 @@ module.exports = {
         test: /\.js$/,
         include: /src/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             presets: [
-              '@babel/preset-env', 
+              "@babel/preset-env", 
               "@babel/preset-react", 
-              {'plugins': ['@babel/plugin-proposal-class-properties']}
+              "module:metro-react-native-babel-preset",
+              {"plugins": ["@babel/plugin-proposal-class-properties"]}
             ]
           },
         },
