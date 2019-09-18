@@ -334,6 +334,11 @@ export default class Enzoic extends Component {
                 onClose={() => this.setState({ modalOpen: false })}
               >
                 <TouchableOpacity 
+                  ref={(elem) => {
+                    if(this.state.modalOpen === false) {
+                      this.toolTipElem = elem
+                    } 
+                  }}
                   style={Object.assign(
                     {}, 
                     styles.scoreTextContainer, 
@@ -342,7 +347,14 @@ export default class Enzoic extends Component {
                     {top: (this.state.modalOpen === true && Platform.OS === "android") ? 24 : 0})
                   } 
                   onPress={() => {
-                    if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
+                    if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen }, () => {
+                      if (this.state.modalOpen === true && this.toolTipElem) {
+                        this.toolTipElem.setOpacityTo(0)
+                      }
+                      if (this.state.modalOpen === false && this.toolTipElem) {
+                        this.toolTipElem.setOpacityTo(1)
+                      }
+                    });
                   }}
                 >
                   <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
