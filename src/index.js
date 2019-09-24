@@ -349,7 +349,10 @@ export default class Enzoic extends Component {
                   onPress={() => {
                     if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen }, () => {
                       if (this.state.modalOpen === true && this.toolTipElem) {
-                        this.toolTipElem.setOpacityTo(0)
+                        // Fire as quickly as possible to hide janky push down from tooltip library making a copy
+                        setTimeout(() => {
+                          this.toolTipElem.setOpacityTo(0)
+                        });
                       }
                       if (this.state.modalOpen === false && this.toolTipElem) {
                         this.toolTipElem.setOpacityTo(1)
