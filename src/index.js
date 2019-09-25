@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Keyboard } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
 import strings from './strings/enzoic_strings';
@@ -343,6 +343,7 @@ export default class Enzoic extends Component {
                   )} 
                   onPress={() => {
                     if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
+                    Keyboard.dismiss()
                   }}
                 >
                   <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
@@ -384,7 +385,7 @@ export default class Enzoic extends Component {
             </View>
           }
         </View>
-        {/* <Animated.View style={Object.assign({}, styles.scoreUnderline, {...width}, backgroundColor)} /> */}
+        <Animated.View style={Object.assign({}, styles.scoreUnderline, {...width}, backgroundColor)} />
       </View>
     )
   }
