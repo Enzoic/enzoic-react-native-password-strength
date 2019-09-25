@@ -304,6 +304,7 @@ export default class Enzoic extends Component {
     });
 
     const scoreTooltip = Enzoic.getScoreTooltip(score, this.state.zxcvbnResult);
+    if (this.state.modalOpen === true) Keyboard.dismiss();
 
     return (
       <View style={style} onLayout={this.onLayout}>
@@ -343,7 +344,6 @@ export default class Enzoic extends Component {
                   )} 
                   onPress={() => {
                     if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
-                    Keyboard.dismiss()
                   }}
                 >
                   <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
