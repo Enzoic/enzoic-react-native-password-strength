@@ -334,30 +334,15 @@ export default class Enzoic extends Component {
                 onClose={() => this.setState({ modalOpen: false })}
               >
                 <TouchableOpacity 
-                  ref={(elem) => {
-                    if(this.state.modalOpen === false) {
-                      this.toolTipElem = elem
-                    } 
-                  }}
                   style={Object.assign(
                     {}, 
                     styles.scoreTextContainer, 
                     backgroundColor, 
                     padding, 
-                    {top: (this.state.modalOpen === true && Platform.OS === "android") ? 24 : 0})
-                  } 
+                    {top: 0}
+                  )} 
                   onPress={() => {
-                    if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen }, () => {
-                      if (this.state.modalOpen === true && this.toolTipElem) {
-                        // Fire as quickly as possible to hide janky push down from tooltip library making a copy
-                        setTimeout(() => {
-                          this.toolTipElem.setOpacityTo(0)
-                        });
-                      }
-                      if (this.state.modalOpen === false && this.toolTipElem) {
-                        this.toolTipElem.setOpacityTo(1)
-                      }
-                    });
+                    if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                   }}
                 >
                   <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
@@ -382,7 +367,7 @@ export default class Enzoic extends Component {
                     styles.scoreTextContainer, 
                     backgroundColor, 
                     padding, 
-                    {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0}
+                    {top: 0}
                   )} 
                   onPress={() => {
                     if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
@@ -399,7 +384,7 @@ export default class Enzoic extends Component {
             </View>
           }
         </View>
-        <Animated.View style={Object.assign({}, styles.scoreUnderline, {...width}, backgroundColor)} />
+        {/* <Animated.View style={Object.assign({}, styles.scoreUnderline, {...width}, backgroundColor)} /> */}
       </View>
     )
   }
