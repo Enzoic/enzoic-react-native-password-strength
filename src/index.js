@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Keyboard } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Keyboard, Platform } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
 import strings from './strings/enzoic_strings';
@@ -273,7 +273,7 @@ export default class Enzoic extends Component {
   }
 
   onLayout = event => {
-    if (this.state.dimensions) return; // layout was already called
+    if (this.state.width) return; // layout was already called
     let { width } = event.nativeEvent.layout;
     this.setState({ width })
   };
