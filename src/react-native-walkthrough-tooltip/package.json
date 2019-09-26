@@ -30,8 +30,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "prop-types": "^15.6.1",
-    "react-fast-compare": "^2.0.4"
+    "prop-types": "^15.6.1"
   },
   "deprecated": false,
   "description": "An inline wrapper for calling out React Native components via tooltip",
