@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
-import rfcIsEqual from "./react-fast-compare";
+import rfcIsEqual from "../react-fast-compare";
 import {
   Point,
   Size,
