@@ -8,7 +8,8 @@
     "url": "https://github.com/enzoic/enzoic-react-native-password-strength/issues"
   },
   "dependencies": {
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react-native-walkthrough-tooltip": "git@github.com:alecook/react-native-walkthrough-tooltip.git#fix/keyboard-overlap-onpress"
   },
   "deprecated": false,
   "description": "Enzoic password strength meter control for use in React Native projects",

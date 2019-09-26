@@ -6,7 +6,7 @@ import strings from './strings/enzoic_strings';
 import sha1 from './hashes/sha1';
 import sha256 from './hashes/sha256';
 import md5 from './hashes/md5';
-import Tooltip from './react-native-walkthrough-tooltip';
+import Tooltip from 'react-native-walkthrough-tooltip';
 
 export default class Enzoic extends Component {
   static propTypes = {
