@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "prop-types": "^15.6.0",
-    "react-native-walkthrough-tooltip": "git@github.com:alecook/react-native-walkthrough-tooltip.git#fix/keyboard-overlap-onpress"
+    "react-native-walkthrough-tooltip": "1.1.0"
   },
   "deprecated": false,
   "description": "Enzoic password strength meter control for use in React Native projects",
