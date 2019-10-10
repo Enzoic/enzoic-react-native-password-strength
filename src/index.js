@@ -7,6 +7,8 @@ import sha1 from './hashes/sha1';
 import sha256 from './hashes/sha256';
 import md5 from './hashes/md5';
 import Tooltip from 'react-native-walkthrough-tooltip';
+import WarningImage from './assets/warning.png';
+import InfoImage from './assets/info.png';
 
 export default class Enzoic extends Component {
   static propTypes = {
@@ -109,7 +111,7 @@ export default class Enzoic extends Component {
     if (this.isTooShort(password) === false) {
       this.checkPasswordWhenReady(password);
     } else {
-      // if password is too, short set a score of 1
+      // if password is too short set a score of 1
       const score = 1;
       this.setState({
         isValid: score >= minScore,
@@ -348,7 +350,7 @@ export default class Enzoic extends Component {
                 >
                   <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
                   <Text style={styles.scoreText}>Hacked</Text>
-                  <Image source={require('./assets/warning.png')} style={{marginLeft: 2}} />
+                  <Image source={{uri: WarningImage}} style={{marginLeft: 2, width: 12, height: 12}} />
                 </TouchableOpacity>
               </Tooltip>
             :
