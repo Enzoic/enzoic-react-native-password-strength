@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "prop-types": "^15.6.0",
-    "react-native-walkthrough-tooltip": "^0.5.3"
+    "react-native-walkthrough-tooltip": "1.1.0"
   },
   "deprecated": false,
   "description": "Enzoic password strength meter control for use in React Native projects",
