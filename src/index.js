@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Animated, Easing, AppRegistry, Image, TouchableOpacity, Dimensions, Keyboard, Platform } from 'react-native';
 import { zxcvbn, isZxcvbnLoaded } from './zxcvbn';
 import PropTypes from 'prop-types';
 import strings from './strings/enzoic_strings';
@@ -37,7 +37,8 @@ export default class Enzoic extends Component {
     password: '',
     hackedPassword: false,
     breachedPassword: false,
-    loading: false
+    loading: false,
+    modalOpen: false
   };
 
   constructor(props) {
@@ -272,7 +273,7 @@ export default class Enzoic extends Component {
   }
 
   onLayout = event => {
-    if (this.state.dimensions) return; // layout was already called
+    if (this.state.width) return; // layout was already called
     let { width } = event.nativeEvent.layout;
     this.setState({ width })
   };
@@ -303,6 +304,7 @@ export default class Enzoic extends Component {
     });
 
     const scoreTooltip = Enzoic.getScoreTooltip(score, this.state.zxcvbnResult);
+    if (this.state.modalOpen === true) Keyboard.dismiss();
 
     return (
       <View style={style} onLayout={this.onLayout}>
@@ -326,16 +328,24 @@ export default class Enzoic extends Component {
             !loading &&
               <Tooltip
                 backgroundColor="#000000aa"
-                animated
-                isVisible={this.state.modalOpen}
+                isVisible={this.state.modalOpen === true}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
                 content={scoreTooltip}
                 placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
               >
-                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
-                  if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
-                }}>
+                <TouchableOpacity 
+                  style={Object.assign(
+                    {}, 
+                    styles.scoreTextContainer, 
+                    backgroundColor, 
+                    padding, 
+                    {top: 0}
+                  )} 
+                  onPress={() => {
+                    if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
+                  }}
+                >
                   <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
                   <Text style={styles.scoreText}>Hacked</Text>
                   <Image source={require('./assets/warning.png')} style={{marginLeft: 2}} />
@@ -346,15 +356,24 @@ export default class Enzoic extends Component {
               <Tooltip
                 backgroundColor="#000000aa"
                 animated
-                isVisible={this.state.modalOpen}
+                isVisible={this.state.modalOpen === true}
                 displayArea={{ x: 0, y: 0, width: Dimensions.get("window").width, height: 100 }}
                 content={scoreTooltip}
                 placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
               >
-                <TouchableOpacity style={Object.assign({}, styles.scoreTextContainer, backgroundColor, padding, {top: (this.state.modalOpen && Platform.OS === "android") ? 24 : 0})} onPress={() => {
-                  if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
-                }}>
+                <TouchableOpacity 
+                  style={Object.assign(
+                    {}, 
+                    styles.scoreTextContainer, 
+                    backgroundColor, 
+                    padding, 
+                    {top: 0}
+                  )} 
+                  onPress={() => {
+                    if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
+                  }}
+                >
                   {password.length > minLength && score !== 4 && score !== 5 && <Image source={require('./assets/info.png')} style={{marginRight: 2}} />}
                   <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
                 </TouchableOpacity>
