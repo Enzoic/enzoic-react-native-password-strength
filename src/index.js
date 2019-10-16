@@ -335,6 +335,7 @@ export default class Enzoic extends Component {
                 content={scoreTooltip}
                 placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
+                showChildInTooltip={false}
               >
                 <TouchableOpacity 
                   style={Object.assign(
@@ -348,7 +349,7 @@ export default class Enzoic extends Component {
                     if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                   }}
                 >
-                  <Image source={require('./assets/warning.png')} style={{marginRight: 2}} />
+                  <Image source={{uri: WarningImage}} style={{marginRight: 2, width: 12, height: 12}} />
                   <Text style={styles.scoreText}>Hacked</Text>
                   <Image source={{uri: WarningImage}} style={{marginLeft: 2, width: 12, height: 12}} />
                 </TouchableOpacity>
@@ -363,6 +364,7 @@ export default class Enzoic extends Component {
                 content={scoreTooltip}
                 placement="top"
                 onClose={() => this.setState({ modalOpen: false })}
+                showChildInTooltip={false}
               >
                 <TouchableOpacity 
                   style={Object.assign(
@@ -376,7 +378,7 @@ export default class Enzoic extends Component {
                     if (scoreTooltip) this.setState({ modalOpen: !this.state.modalOpen })
                   }}
                 >
-                  {password.length > minLength && score !== 4 && score !== 5 && <Image source={require('./assets/info.png')} style={{marginRight: 2}} />}
+                  {password.length > minLength && score !== 4 && score !== 5 && <Image source={{uri: InfoImage}} style={{marginRight: 2, width: 12, height: 12}} />}
                   <Text style={styles.scoreText}>{(password.length < minLength && password.length !== 0) ? tooShortWord : password.length ? scoreWords[score] : ""}</Text>
                 </TouchableOpacity>
               </Tooltip>
