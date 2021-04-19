@@ -7,11 +7,13 @@ export default {
         "Strong",
         "Very Strong"
     ],
+    "tooShort": "Too Short",
     "enterAPassword": "Choose a password",
     "passwordStrength": "Password Strength",
     "poweredBy": "powered by",
-    "breachedPasswordMessage": "This password is known to hackers and should not be used. It was exposed publicly in one or more of the data breaches in recent years (LinkedIn, MySpace, Yahoo, etc.). We strongly recommend you choose a different password and discontinue usage of this one.",
-    "hackedPasswordMessage": "This password is known to hackers and should not be used. It is found in common password cracking dictionaries. We strongly recommend you choose a different password and discontinue usage of this one.",
+    "hackedPasswordTitle": "Compromised or \"Hacked\" Password",
+    "breachedPasswordMessage": "This password is known to hackers and should not be used. It was exposed publicly in one or more data breaches in recent years.\n\nChoose a different password and discontinue usage of this one.",
+    "hackedPasswordMessage": "This password is known to hackers and should not be used. It is found in common password cracking dictionaries.\n\nChoose a different password and discontinue usage of this one.",
     "suggestion": "Suggestions",
     "suggestions": {
         "defaultFeedback": "Use a few words, avoid common phrases",
@@ -40,6 +42,7 @@ export default {
         "capitalization": "Capitalization doesn't help very much",
         "allUpperCase": "All-uppercase is almost as easy to guess as all-lowercase",
         "reversedWords": "Reversed words aren't much harder to guess",
-        "predictableSubs": "Predictable substitutions like '@' instead of 'a' don't help very much"
+        "predictableSubs": "Predictable substitutions like '@' instead of 'a' don't help very much",
+        "allNumbers": "Passwords consisting of all numbers are easy to guess"
     }
-}
+};
