@@ -12,7 +12,7 @@ export default {
     "passwordStrength": "Password Strength",
     "poweredBy": "powered by",
     "hackedPasswordTitle": "Compromised or \"Hacked\" Password",
-    "breachedPasswordMessage": "This password is known to hackers and should not be used. It was exposed publicly in one or more data breaches in recent years.\n\nChoose a different password and discontinue usage of this one.",
+    "breachedPasswordMessage": "This password is known to hackers and should not be used. It has been exposed publicly in one or more data breaches.\n\nChoose a different password and discontinue usage of this one.",
     "hackedPasswordMessage": "This password is known to hackers and should not be used. It is found in common password cracking dictionaries.\n\nChoose a different password and discontinue usage of this one.",
     "suggestion": "Suggestions",
     "suggestions": {

@@ -1,0 +1,12 @@
+{
+  "name": "EnzoicReactNativePasswordStrengthExample",
+  "displayName": "EnzoicReactNativePasswordStrengthExample",
+  "expo": {
+    "name": "EnzoicReactNativePasswordStrengthExample",
+    "slug": "EnzoicReactNativePasswordStrengthExample",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

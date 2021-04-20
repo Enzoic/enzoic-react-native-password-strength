@@ -68,7 +68,6 @@ export default class Enzoic extends Component {
         this.getStrings = this.getStrings.bind(this);
         this.getTooShortWord = this.getTooShortWord.bind(this);
         this.getScoreWord = this.getScoreWord.bind(this);
-        this.getMessageFromZXCVBNResult = this.getMessageFromZXCVBNResult.bind(this);
         this.getScoreTooltip = this.getScoreTooltip.bind(this);
 
         this.apiURL = 'https://api.enzoic.com';
@@ -274,66 +273,50 @@ export default class Enzoic extends Component {
         }
     }
 
-    getMessageFromZXCVBNResult(zxcvbnresult) {
-        let message = [];
-        let numLines = 0;
-
-        if (zxcvbnresult && zxcvbnresult.feedback) {
-            let scoreWord = this.getStrings().strengthRatings[this.state.score];
-            if (this.props.scoreWords && this.props.scoreWords.length === 6) {
-                scoreWord = this.props.scoreWords[this.state.score];
-            }
-
-            message.push(<Text key={numLines++} style={styles.tooltipTitle}>
-                {this.getStrings().passwordStrength + ": " + scoreWord + "\n"}
-            </Text>);
-
-            if (zxcvbnresult.feedback.warning) {
-                message.push(<Text key={numLines} style={styles.tooltipBody}>
-                    {zxcvbnresult.feedback.warning + "\n"}
-                </Text>);
-                numLines++;
-            }
-
-            if (zxcvbnresult.feedback.suggestions.length > 0) {
-                message.push(<Text key={numLines} style={styles.tooltipSubtitle}>
-                    {this.getStrings().suggestion + ":\n"}
-                </Text>);
-                numLines++;
-
-                for (let i = 0; i < zxcvbnresult.feedback.suggestions.length; i++) {
-                    message.push(<Text key={numLines} style={styles.tooltipBody}>
-                        {"\u2022 " + zxcvbnresult.feedback.suggestions[i] + "\n"}
-                    </Text>);
-                    numLines++;
-                }
-            }
-        }
-        return {message: message, numLines: numLines};
-    }
-
     getScoreTooltip(score, zxcvbnresult) {
         if (!zxcvbnresult) return null;
 
         if (score === 0) {
-            if (this.state.breachedPassword === true) {
-                return [
-                    <Text key="1" style={styles.tooltipTitle}>{this.getStrings().hackedPasswordTitle + "\n"}</Text>,
-                    <Text key="2" style={styles.tooltipBody}>{this.getStrings().breachedPasswordMessage}</Text>
-                ];
-            }
-            else {
-                return [
-                    <Text key="1" style={styles.tooltipTitle}>{this.getStrings().hackedPasswordTitle + "\n"}</Text>,
-                    <Text key="2" style={styles.tooltipBody}>{this.getStrings().hackedPasswordMessage}</Text>
-                ];
-            }
+            return this.formatTooltipContent({
+                score,
+                title: this.getStrings().hackedPasswordTitle,
+                message: this.state.breachedPassword === true ? this.getStrings().breachedPasswordMessage : this.getStrings().hackedPasswordMessage
+            });
         }
         else if (score < 4) {
-            return this.getMessageFromZXCVBNResult(zxcvbnresult).message;
+            return this.formatTooltipContent({
+                score,
+                title: this.getStrings().passwordStrength + ": " + this.getScoreWord(score),
+                message: zxcvbnresult.feedback.warning,
+                suggestions: zxcvbnresult.feedback.suggestions
+            });
         }
 
         return null;
+    }
+
+    formatTooltipContent({score, title, message, suggestions}) {
+        const result = [];
+        let numLines = 1;
+
+        const backgroundColor = this.getColorForScore(score);
+
+        result.push(<Text key={numLines++} style={[styles.tooltipTitle, {backgroundColor}]}>{title}</Text>);
+        result.push(<Text key={numLines++} style={styles.tooltipBody}>{message}</Text>);
+
+        if (suggestions && suggestions.length) {
+            result.push(<Text key={numLines++} style={styles.tooltipSubtitle}>
+                {this.getStrings().suggestion + ":\n"}
+            </Text>);
+
+            for (let i = 0; i < suggestions.length; i++) {
+                result.push(<Text key={numLines++} style={styles.tooltipBody}>
+                    {"\u2022 " + suggestions[i] + "\n"}
+                </Text>);
+            }
+        }
+
+        return result;
     }
 
     isTooShort(password) {
@@ -344,22 +327,18 @@ export default class Enzoic extends Component {
         if (this.state.width) return; // layout was already called
         let {width} = event.nativeEvent.layout;
         this.setState({width})
-    };
+    }
 
     getStrings() {
         return strings[this.props.language] || strings['en'];
     }
 
-    getScoreWord(score) {
-        let scoreWord = this.getStrings().strengthRatings[score];
-        if (this.props.scoreWords && this.props.scoreWords.length === 6) {
-            scoreWord = this.props.scoreWords[score]
-        }
-
+    getScoreContainerContent(score) {
+        const scoreWord = this.getScoreWord(score);
         switch (score) {
             case 0:
                 return [
-                    <Image source={{uri: WarningImage}} style={[styles.warningIcon, {marginRight: 2}]}/>,
+                    <Image source={{uri: WarningImage}} style={[styles.warningIcon, {marginRight: 2, marginLeft: 1}]}/>,
                     <Text style={styles.scoreText}>{scoreWord}</Text>,
                     <Image source={{uri: WarningImage}} style={[styles.warningIcon, {marginLeft: 4}]}/>
                 ];
@@ -375,16 +354,21 @@ export default class Enzoic extends Component {
         }
     }
 
+    getScoreWord(score) {
+        let scoreWord = this.getStrings().strengthRatings[score];
+        if (this.props.scoreWords && this.props.scoreWords.length === 6) {
+            scoreWord = this.props.scoreWords[score]
+        }
+        return scoreWord;
+    }
+
     getTooShortWord() {
         return <Text style={styles.scoreText}>
             {this.props.tooShortWord || this.getStrings().tooShort}
         </Text>;
     }
 
-    getBackgroundColor(password, loading, score, forContainer) {
-        // don't show container if no password entered or we're loading
-        if ((!forContainer && loading) || !password || password.length === 0) return "#00000000";
-
+    getColorForScore(score) {
         if (score < 3) {
             return "#FF0000";
         }
@@ -394,6 +378,13 @@ export default class Enzoic extends Component {
         else {
             return "#2FBF71";
         }
+    }
+
+    getBackgroundColor(password, loading, score, forContainer) {
+        // don't show container if no password entered or we're loading
+        if ((!forContainer && loading) || !password || password.length === 0) return "#00000000";
+
+        return this.getColorForScore(score);
     }
 
     startLoaderAnimation() {
@@ -424,7 +415,7 @@ export default class Enzoic extends Component {
             ? <></>
             : this.isTooShort(password)
                 ? this.getTooShortWord()
-                : this.getScoreWord(score);
+                : this.getScoreContainerContent(score);
 
         const scoreTooltip = this.getScoreTooltip(score, this.state.zxcvbnResult);
         if (this.state.modalOpen === true) Keyboard.dismiss();
@@ -506,6 +497,7 @@ const styles = {
     },
     scoreText: {
         fontSize: 12,
+        fontWeight: "bold",
         color: "white",
         right: 0,
         textAlign: "center",
@@ -535,7 +527,13 @@ const styles = {
         borderRadius: 40
     },
     tooltipTitle: {
-        color: "black",
+        position: "relative",
+        top: -8,
+        left: -8,
+        width: "110%",
+        padding: 8,
+        color: "white",
+        //color: "black",
         fontSize: 18,
         fontWeight: "bold"
     },
@@ -544,6 +542,7 @@ const styles = {
     },
     tooltipSubtitle: {
         color: "black",
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginTop: 20
     }
 };
