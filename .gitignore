@@ -1,3 +1,8 @@
 node_modules
 .idea
 .DS_Store
+
+example/ios/Pods/
+example/android/gradle/
+example/android/build/
+example/node_modules/
