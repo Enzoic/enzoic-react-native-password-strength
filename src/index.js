@@ -19,6 +19,8 @@ import md5 from './hashes/md5';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import WarningImage from './assets/warning.png';
 import InfoImage from './assets/info.png';
+import Eye from "./assets/eye.png";
+import EyeOff from "./assets/eye-off.png";
 
 export default class Enzoic extends Component {
     static propTypes = {
@@ -31,6 +33,12 @@ export default class Enzoic extends Component {
         tooShortWord: PropTypes.string,
         userInputs: PropTypes.array,
         language: PropTypes.string,
+        scoreContainerOffset: PropTypes.number,
+        inputComponent: PropTypes.element,
+        inputStyles: PropTypes.object,
+        wrapperElement: PropTypes.element,
+        wrapperElementProps: PropTypes.object,
+        insertedElements: PropTypes.element,
     };
 
     static defaultProps = {
@@ -39,7 +47,8 @@ export default class Enzoic extends Component {
         minLength: 8,
         minScore: 4,
         userInputs: [],
-        language: "en"
+        language: "en",
+        scoreContainerOffset: -12,
     };
 
     state = {
@@ -53,7 +62,8 @@ export default class Enzoic extends Component {
         modalOpen: false,
         strengthBarWidth: new Animated.Value(0),
         loaderScale: new Animated.Value(0),
-        loaderOpacity: new Animated.Value(1)
+        loaderOpacity: new Animated.Value(1),
+        showPassword: false,
     };
 
     constructor(props) {
@@ -69,6 +79,7 @@ export default class Enzoic extends Component {
         this.getTooShortWord = this.getTooShortWord.bind(this);
         this.getScoreWord = this.getScoreWord.bind(this);
         this.getScoreTooltip = this.getScoreTooltip.bind(this);
+        this.toggleShowPassword = this.toggleShowPassword.bind(this);
 
         this.apiURL = 'https://api.enzoic.com';
     }
@@ -302,10 +313,13 @@ export default class Enzoic extends Component {
         const backgroundColor = this.getColorForScore(score);
 
         result.push(<Text key={numLines++} style={[styles.tooltipTitle, {backgroundColor}]}>{title}</Text>);
-        result.push(<Text key={numLines++} style={styles.tooltipBody}>{message}</Text>);
+
+        if (message) {
+            result.push(<Text key={numLines++} style={styles.tooltipBody}>{message}</Text>);
+        }
 
         if (suggestions && suggestions.length) {
-            result.push(<Text key={numLines++} style={styles.tooltipSubtitle}>
+            result.push(<Text key={numLines++} style={[styles.tooltipSubtitle, { marginTop: message ? 20 : 0 }]}>
                 {this.getStrings().suggestion + ":\n"}
             </Text>);
 
@@ -404,6 +418,12 @@ export default class Enzoic extends Component {
         ).start();
     }
 
+    toggleShowPassword() {
+        this.setState({
+            showPassword: !this.state.showPassword
+        });
+    }
+
     render() {
         const {score, password, loading} = this.state;
         const {style, onChangeText} = this.props;
@@ -420,37 +440,44 @@ export default class Enzoic extends Component {
         const scoreTooltip = this.getScoreTooltip(score, this.state.zxcvbnResult);
         if (this.state.modalOpen === true) Keyboard.dismiss();
 
-        return (
-            <View style={style} onLayout={this.onLayout}>
-                <View style={styles.main}>
-                    <TextInput
-                        underlineColorAndroid="transparent"
-                        placeholder="New Password"
-                        placeholderTextColor="#b0b0b0"
-                        style={styles.input}
-                        type="password"
-                        secureTextEntry
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        onChangeText={(text) => {
-                            this.handleChange(text);
-                            if (onChangeText) onChangeText(text);
+        return <View style={[styles.main, this.props.style]}>
+            {React.createElement(this.props.wrapperElement || View,
+                {
+                    ...this.props.wrapperElementProps,
+                    style: [styles.wrapperElement],
+                    onLayout: this.onLayout
+                },
+                this.props.insertedElements,
+                React.createElement(this.props.inputComponent || TextInput, {
+                    key: "input",
+                    style: [styles.input, this.props.inputStyles],
+                    placeholder: this.props.placeholder,
+                    type: "password",
+                    secureTextEntry: !this.state.showPassword,
+                    autoCapitalize: "none",
+                    autoCorrect: false,
+                    onChangeText: (text) => {
+                        this.handleChange(text);
+                        if (onChangeText) onChangeText(text);
+                    },
+                    value: password,
+                }))}
+            <View style={[styles.scoreContainer, {marginTop: this.props.scoreContainerOffset}]}>
+                <Tooltip
+                    backgroundColor="#000000aa"
+                    isVisible={this.state.modalOpen === true}
+                    content={scoreTooltip}
+                    placement="top"
+                    onClose={() => this.setState({modalOpen: false})}
+                >
+                    <View style={styles.scoreSubcontainer}>
+                    <TouchableOpacity
+                        style={[styles.scoreTextContainer, {backgroundColor: containerBackgroundColor}]}
+                        onPress={() => {
+                            if (scoreTooltip) this.setState({modalOpen: !this.state.modalOpen})
                         }}
-                        value={password}
-                    />
-                    <Tooltip
-                        backgroundColor="#000000aa"
-                        isVisible={this.state.modalOpen === true}
-                        content={scoreTooltip}
-                        placement="top"
-                        onClose={() => this.setState({modalOpen: false})}
                     >
-                        <TouchableOpacity
-                            style={[styles.scoreTextContainer, {backgroundColor: containerBackgroundColor}]}
-                            onPress={() => {
-                                if (scoreTooltip) this.setState({modalOpen: !this.state.modalOpen})
-                            }}
-                        >
+                        <View style={styles.loaderContainer}>
                             <Animated.View style={[
                                 styles.loaderIcon, {
                                     display: loading === true ? "flex" : "none",
@@ -460,36 +487,51 @@ export default class Enzoic extends Component {
                                     ]
                                 }
                             ]}/>
-                            {strengthDesc}
-                        </TouchableOpacity>
-                    </Tooltip>
-                </View>
-                <Animated.View style={[styles.scoreUnderline,
-                    {width: this.state.strengthBarWidth, backgroundColor: barBackgroundColor}]}/>
+                        </View>
+                        {strengthDesc}
+                    </TouchableOpacity>
+                    </View>
+                </Tooltip>
+                <TouchableOpacity onPress={this.toggleShowPassword} style={styles.showPasswordContainer}>
+                    {!!password && this.state.showPassword && <Image source={{uri: EyeOff}} style={styles.eyeIcon}/>}
+                    {!!password && !this.state.showPassword && <Image source={{uri: Eye}} style={styles.eyeIcon}/>}
+                </TouchableOpacity>
             </View>
-        )
+            <Animated.View style={[styles.scoreUnderline,
+                {width: this.state.strengthBarWidth, backgroundColor: barBackgroundColor}]}/>
+        </View>;
     }
 }
 
 const styles = {
     main: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#D9D5DC",
-        paddingHorizontal: 10,
-        height: 50
+        justifyContent: "center"
+    },
+    wrapperElement: {
     },
     input: {
-        fontSize: 17,
-        textAlign: "left",
-        flex: 1,
-        padding: 10,
-        backgroundColor: "transparent"
+        paddingRight: 177,
+    },
+    scoreContainer: {
+        position: "absolute",
+        top: "50%",
+        right: 10,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        width: 169
+    },
+    showPasswordContainer: {
+        marginLeft: 10,
+        width: 24
+    },
+    scoreSubcontainer: {
+        width: 135,
     },
     scoreTextContainer: {
+        alignSelf: "flex-end",
         padding: 4,
+        display: "flex",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -505,8 +547,12 @@ const styles = {
     },
     scoreUnderline: {
         position: "absolute",
-        bottom: -2,
+        bottom: -4,
         height: 4,
+    },
+    eyeIcon: {
+        width: 24,
+        height: 24
     },
     warningIcon: {
         position: "relative",
@@ -518,9 +564,12 @@ const styles = {
         width: 15,
         height: 15
     },
-    loaderIcon: {
+    loaderContainer: {
         position: "absolute",
-        right: 10,
+        top: -16,
+        right: 20,
+    },
+    loaderIcon: {
         backgroundColor: "#333",
         width: 40,
         height: 40,
@@ -533,7 +582,6 @@ const styles = {
         width: "110%",
         padding: 8,
         color: "white",
-        //color: "black",
         fontSize: 18,
         fontWeight: "bold"
     },
@@ -542,7 +590,7 @@ const styles = {
     },
     tooltipSubtitle: {
         color: "black",
-        fontWeight: "bold",
-        marginTop: 20
+        fontWeight: "bold"
     }
 };
+

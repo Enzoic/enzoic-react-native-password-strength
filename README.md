@@ -5,7 +5,7 @@ The [Enzoic](https://www.enzoic.com) React Native Password Strength Meter replac
  but also verifies that the password is not known to be compromised by checking it against Enzoic's Passwords API.
  
 The password strength meter is free to use for up to 100,000 requests per month against the Enzoic API.  After that, the meter will 
-fallback to zxcvbn checks only.  
+fallback to zxcvbn checks only.  If you need more requests than that, you can contact us at https://enzoic.com/contact-us 
 
 ## Install in your project
 
@@ -35,7 +35,7 @@ Using CommonJS require:
 
 ### Props
 
-#### Style
+#### style
 
 - Style object to customize container
 
@@ -81,7 +81,36 @@ Using CommonJS require:
 - An array of strings that zxcvbn will treat as an extra dictionary.  You can add your product name, company name into this list 
 to prevent these from being used as part of user passwords.
 
+#### language
+
+- An ISO 639-1 language code for which language to display strings in.  Currently supported: English (en), French (fr), Spanish (es), German (de), Portuguese (pt), and Italian (it).
+
+#### inputComponent
+
+- Optionally provide a different input component than the React Native default TextInput to use.
+
+#### inputStyles
+
+- Style object for the input element.
+
+#### wrapperElement
+
+- Optionally provide a wrapper component to use around the input field (default is View).
+
+#### wrapperElementProps
+
+- Props object for the wrapper element.
+
+#### insertedElements
+
+- Additional elements to be inserted inside the wrapper element.
+
+#### scoreContainerOffset
+
+- By default the score container (e.g. Strong, Weak, etc.) is vertically centered in the input element.  You can provide a positive or negative offset value to move it up or down.
+
+
 ### Acknowledgements
 
 This library is based heavily on the [react-password-strength library](https://github.com/mmw/react-password-strength)
- by Mateusz Wijas.  
+ by Mateusz Wijas and the [zxcvbn](https://github.com/dropbox/zxcvbn) library by Dropbox.
