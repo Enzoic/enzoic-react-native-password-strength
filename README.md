@@ -109,6 +109,13 @@ to prevent these from being used as part of user passwords.
 
 - By default the score container (e.g. Strong, Weak, etc.) is vertically centered in the input element.  You can provide a positive or negative offset value to move it up or down.
 
+#### showPasswordIconOverride
+
+- By default the component will use a dark gray eye image for the show plaintext password icon.  This allows you to pass in an element to override it.  For example, you may pass in an Icon from the iconset you are using or an alternate Image.  You will need to size it appropriately (45x45).
+
+#### hidePasswordIconOverride
+
+- By default the component will use a dark gray eye image for the hide plaintext password icon.  This allows you to pass in an element to override it.  For example, you may pass in an Icon from the iconset you are using or an alternate Image.  You will need to size it appropriately (45x45).
 
 ### Acknowledgements
 
