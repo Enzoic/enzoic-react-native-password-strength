@@ -39,6 +39,8 @@ export default class Enzoic extends Component {
         wrapperElement: PropTypes.element,
         wrapperElementProps: PropTypes.object,
         insertedElements: PropTypes.element,
+        showPasswordIconOverride: PropTypes.element,
+        hidePasswordIconOverride: PropTypes.element,
     };
 
     static defaultProps = {
@@ -80,6 +82,8 @@ export default class Enzoic extends Component {
         this.getScoreWord = this.getScoreWord.bind(this);
         this.getScoreTooltip = this.getScoreTooltip.bind(this);
         this.toggleShowPassword = this.toggleShowPassword.bind(this);
+        this.getShowPasswordIcon = this.getShowPasswordIcon.bind(this);
+        this.getHidePasswordIcon = this.getHidePasswordIcon.bind(this);
 
         this.apiURL = 'https://api.enzoic.com';
     }
@@ -352,16 +356,16 @@ export default class Enzoic extends Component {
         switch (score) {
             case 0:
                 return [
-                    <Image source={{uri: WarningImage}} style={[styles.warningIcon, {marginRight: 2, marginLeft: 1}]}/>,
-                    <Text style={styles.scoreText}>{scoreWord}</Text>,
-                    <Image source={{uri: WarningImage}} style={[styles.warningIcon, {marginLeft: 4}]}/>
+                    <Image key="image1" source={{uri: WarningImage}} style={[styles.warningIcon, {marginRight: 2, marginLeft: 1}]}/>,
+                    <Text key="text" style={styles.scoreText}>{scoreWord}</Text>,
+                    <Image key="image2" source={{uri: WarningImage}} style={[styles.warningIcon, {marginLeft: 4}]}/>
                 ];
             case 1:
             case 2:
             case 3:
                 return [
-                    <Image source={{uri: InfoImage}} style={[styles.infoIcon, {marginRight: 2}]}/>,
-                    <Text style={styles.scoreText}>{scoreWord}</Text>
+                    <Image key="image" source={{uri: InfoImage}} style={[styles.infoIcon, {marginRight: 2}]}/>,
+                    <Text key="text" style={styles.scoreText}>{scoreWord}</Text>
                 ];
             default:
                 return <Text style={styles.scoreText}>{scoreWord}</Text>
@@ -422,6 +426,20 @@ export default class Enzoic extends Component {
         this.setState({
             showPassword: !this.state.showPassword
         });
+    }
+
+    getShowPasswordIcon() {
+        if (this.props.showPasswordIconOverride) {
+            return this.props.showPasswordIconOverride;
+        }
+        return <Image source={{uri: Eye}} style={styles.eyeIcon}/>;
+    }
+
+    getHidePasswordIcon() {
+        if (this.props.hidePasswordIconOverride) {
+            return this.props.hidePasswordIconOverride;
+        }
+        return <Image source={{uri: EyeOff}} style={styles.eyeIcon}/>;
     }
 
     render() {
@@ -493,8 +511,8 @@ export default class Enzoic extends Component {
                     </View>
                 </Tooltip>
                 <TouchableOpacity onPress={this.toggleShowPassword} style={styles.showPasswordContainer}>
-                    {!!password && this.state.showPassword && <Image source={{uri: EyeOff}} style={styles.eyeIcon}/>}
-                    {!!password && !this.state.showPassword && <Image source={{uri: Eye}} style={styles.eyeIcon}/>}
+                    {!!password && this.state.showPassword && this.getHidePasswordIcon()}
+                    {!!password && !this.state.showPassword && this.getShowPasswordIcon()}
                 </TouchableOpacity>
             </View>
             <Animated.View style={[styles.scoreUnderline,
