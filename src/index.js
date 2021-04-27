@@ -41,6 +41,7 @@ export default class Enzoic extends Component {
         insertedElements: PropTypes.element,
         showPasswordIconOverride: PropTypes.element,
         hidePasswordIconOverride: PropTypes.element,
+        inputProps: PropTypes.object,
     };
 
     static defaultProps = {
@@ -51,6 +52,7 @@ export default class Enzoic extends Component {
         userInputs: [],
         language: "en",
         scoreContainerOffset: -12,
+        inputProps: {},
     };
 
     state = {
@@ -444,7 +446,7 @@ export default class Enzoic extends Component {
 
     render() {
         const {score, password, loading} = this.state;
-        const {style, onChangeText} = this.props;
+        const {style, onChangeText, inputProps} = this.props;
 
         const containerBackgroundColor = this.getBackgroundColor(password, loading, score, false);
         const barBackgroundColor = this.getBackgroundColor(password, loading, score, true);
@@ -467,6 +469,7 @@ export default class Enzoic extends Component {
                 },
                 this.props.insertedElements,
                 React.createElement(this.props.inputComponent || TextInput, {
+                    ...inputProps,
                     key: "input",
                     style: [styles.input, this.props.inputStyles],
                     placeholder: this.props.placeholder,

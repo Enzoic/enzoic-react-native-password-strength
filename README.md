@@ -20,7 +20,6 @@ _Note: react/react-native is a peer dependency. You should be using this in a Re
   style={{ display: 'none' }}
   minLength={5}
   minScore={2}
-  scoreWords={['hacked', 'weak', 'okay', 'good', 'strong', 'stronger']}
   changeCallback={onchange}
 />
 ```
@@ -88,6 +87,10 @@ to prevent these from being used as part of user passwords.
 #### inputComponent
 
 - Optionally provide a different input component than the React Native default TextInput to use.
+
+#### inputProps
+
+- Additional props to apply to the input element.
 
 #### inputStyles
 
