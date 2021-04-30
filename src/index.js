@@ -143,16 +143,6 @@ export default class Enzoic extends Component {
 
         this.setState({password});
 
-        if (password === "") {
-            this.setState({
-                score: 0,
-                breachedPassword: false,
-                zxcvbnScore: 0
-            });
-            this.animate(0);
-            return;
-        }
-
         if (this.isTooShort(password) === false) {
             this.checkPasswordWhenReady(password);
         }
