@@ -9,6 +9,7 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
+    Platform
 } from 'react-native';
 import {zxcvbn, isZxcvbnLoaded} from './zxcvbn';
 import PropTypes from 'prop-types';
@@ -42,6 +43,7 @@ export default class Enzoic extends Component {
         showPasswordIconOverride: PropTypes.element,
         hidePasswordIconOverride: PropTypes.element,
         inputProps: PropTypes.object,
+        highlightStrengthBubble: PropTypes.bool
     };
 
     static defaultProps = {
@@ -51,8 +53,9 @@ export default class Enzoic extends Component {
         minScore: 4,
         userInputs: [],
         language: "en",
-        scoreContainerOffset: -12,
+        scoreContainerOffset: -14,
         inputProps: {},
+        highlightStrengthBubble: true
     };
 
     state = {
@@ -67,6 +70,9 @@ export default class Enzoic extends Component {
         strengthBarWidth: new Animated.Value(0),
         loaderScale: new Animated.Value(0),
         loaderOpacity: new Animated.Value(1),
+        pulseScaleX: new Animated.Value(1),
+        pulseScaleY: new Animated.Value(1),
+        pulseOpacity: new Animated.Value(0.6),
         showPassword: false,
     };
 
@@ -122,6 +128,8 @@ export default class Enzoic extends Component {
             password: '',
             loading: false,
         }, () => {
+            this.stopLoaderAnimation();
+
             if (changeCallback !== null) {
                 changeCallback(this.state);
             }
@@ -160,6 +168,7 @@ export default class Enzoic extends Component {
                 zxcvbnResult: null,
                 loading: false
             }, () => {
+                this.stopLoaderAnimation();
                 this.animate(score / 5);
                 if (changeCallback !== null) {
                     changeCallback(this.state, null);
@@ -245,6 +254,7 @@ export default class Enzoic extends Component {
                                             isValid: false,
                                             loading: false
                                         }, () => {
+                                            this.stopLoaderAnimation();
                                             this.animate(0.2);
                                             if (this.props.changeCallback !== null) {
                                                 this.props.changeCallback(this.state, this.state.zxcvbnResult);
@@ -268,6 +278,7 @@ export default class Enzoic extends Component {
                             breachedPassword: false,
                             isValid: this.state.zxcvbnScore >= this.props.minScore
                         }, () => {
+                            this.stopLoaderAnimation();
                             this.animate(this.state.score / 5);
                             if (this.props.changeCallback !== null) {
                                 this.props.changeCallback(this.state, this.state.zxcvbnResult);
@@ -286,7 +297,9 @@ export default class Enzoic extends Component {
             this.ppCurrentRequest.send();
         }
         else {
-            this.setState({loading: false});
+            this.setState({loading: false}, () => {
+                this.stopLoaderAnimation();
+            });
         }
     }
 
@@ -325,7 +338,7 @@ export default class Enzoic extends Component {
         }
 
         if (suggestions && suggestions.length) {
-            result.push(<Text key={numLines++} style={[styles.tooltipSubtitle, { marginTop: message ? 20 : 0 }]}>
+            result.push(<Text key={numLines++} style={[styles.tooltipSubtitle, {marginTop: message ? 20 : 0}]}>
                 {this.getStrings().suggestion + ":\n"}
             </Text>);
 
@@ -357,20 +370,25 @@ export default class Enzoic extends Component {
         const scoreWord = this.getScoreWord(score);
         switch (score) {
             case 0:
+                this.startPulseAnimation();
                 return [
-                    <Image key="image1" source={{uri: WarningImage}} style={[styles.warningIcon, {marginRight: 2, marginLeft: 1}]}/>,
+                    <Image key="image1" source={{uri: WarningImage}}
+                           style={[styles.warningIcon, {marginRight: 4, marginLeft: 4}]}/>,
                     <Text key="text" style={styles.scoreText}>{scoreWord}</Text>,
-                    <Image key="image2" source={{uri: WarningImage}} style={[styles.warningIcon, {marginLeft: 4}]}/>
+                    <Image key="image2" source={{uri: WarningImage}}
+                           style={[styles.warningIcon, {marginLeft: 4, marginRight: 1}]}/>
                 ];
             case 1:
             case 2:
             case 3:
+                this.startPulseAnimation();
                 return [
                     <Image key="image" source={{uri: InfoImage}} style={[styles.infoIcon, {marginRight: 2}]}/>,
-                    <Text key="text" style={styles.scoreText}>{scoreWord}</Text>
+                    <Text key="text" style={styles.scoreText}>{scoreWord}</Text>,
                 ];
             default:
-                return <Text style={styles.scoreText}>{scoreWord}</Text>
+                //this.stopPulseAnimation();
+                return <Text style={[styles.scoreText, {marginLeft: 4, marginRight: 1}]}>{scoreWord}</Text>
         }
     }
 
@@ -383,7 +401,7 @@ export default class Enzoic extends Component {
     }
 
     getTooShortWord() {
-        return <Text style={styles.scoreText}>
+        return <Text style={[styles.scoreText, {marginLeft: 4, marginRight: 1}]}>
             {this.props.tooShortWord || this.getStrings().tooShort}
         </Text>;
     }
@@ -424,6 +442,39 @@ export default class Enzoic extends Component {
         ).start();
     }
 
+    stopLoaderAnimation() {
+        this.state.loaderScale.stopAnimation();
+        this.state.loaderOpacity.stopAnimation();
+    }
+
+    startPulseAnimation() {
+        Animated.loop(
+            Animated.parallel([
+                Animated.timing(this.state.pulseScaleX, {
+                    toValue: 1.3,
+                    duration: 1000,
+                    useNativeDriver: false
+                }),
+                Animated.timing(this.state.pulseScaleY, {
+                    toValue: 1.7,
+                    duration: 1000,
+                    useNativeDriver: false
+                }),
+                Animated.timing(this.state.pulseOpacity, {
+                    toValue: 0,
+                    duration: 1000,
+                    useNativeDriver: false
+                })
+            ])
+        ).start();
+    }
+
+    stopPulseAnimation() {
+        this.state.pulseOpacity.stopAnimation();
+        this.state.pulseScaleX.stopAnimation();
+        this.state.pulseScaleY.stopAnimation();
+    }
+
     toggleShowPassword() {
         this.setState({
             showPassword: !this.state.showPassword
@@ -445,8 +496,14 @@ export default class Enzoic extends Component {
     }
 
     render() {
-        const {score, password, loading} = this.state;
-        const {style, onChangeText, inputProps} = this.props;
+        const {
+            score, password, loading, modalOpen, loaderOpacity, loaderScale, pulseOpacity, pulseScaleX, pulseScaleY,
+            zxcvbnResult, showPassword, strengthBarWidth
+        } = this.state;
+        const {
+            style, onChangeText, inputProps, scoreContainerOffset, placeholder, minLength, highlightStrengthBubble,
+            inputStyles, inputComponent, wrapperElement, wrapperElementProps
+        } = this.props;
 
         const containerBackgroundColor = this.getBackgroundColor(password, loading, score, false);
         const barBackgroundColor = this.getBackgroundColor(password, loading, score, true);
@@ -457,24 +514,24 @@ export default class Enzoic extends Component {
                 ? this.getTooShortWord()
                 : this.getScoreContainerContent(score);
 
-        const scoreTooltip = this.getScoreTooltip(score, this.state.zxcvbnResult);
-        if (this.state.modalOpen === true) Keyboard.dismiss();
+        const scoreTooltip = this.getScoreTooltip(score, zxcvbnResult);
+        if (modalOpen === true) Keyboard.dismiss();
 
-        return <View style={[styles.main, this.props.style]}>
-            {React.createElement(this.props.wrapperElement || View,
+        return <View style={[styles.main, style]}>
+            {React.createElement(wrapperElement || View,
                 {
-                    ...this.props.wrapperElementProps,
+                    ...wrapperElementProps,
                     style: [styles.wrapperElement],
                     onLayout: this.onLayout
                 },
                 this.props.insertedElements,
-                React.createElement(this.props.inputComponent || TextInput, {
+                React.createElement(inputComponent || TextInput, {
                     ...inputProps,
                     key: "input",
-                    style: [styles.input, this.props.inputStyles],
-                    placeholder: this.props.placeholder,
+                    style: [styles.input, inputStyles],
+                    placeholder: placeholder,
                     type: "password",
-                    secureTextEntry: !this.state.showPassword,
+                    secureTextEntry: !showPassword,
                     autoCapitalize: "none",
                     autoCorrect: false,
                     onChangeText: (text) => {
@@ -483,43 +540,56 @@ export default class Enzoic extends Component {
                     },
                     value: password,
                 }))}
-            <View style={[styles.scoreContainer, {marginTop: this.props.scoreContainerOffset}]}>
+            <View style={[styles.scoreContainer, {marginTop: scoreContainerOffset}]}>
                 <Tooltip
                     backgroundColor="#000000aa"
-                    isVisible={this.state.modalOpen === true}
+                    isVisible={modalOpen === true}
                     content={scoreTooltip}
                     placement="top"
                     onClose={() => this.setState({modalOpen: false})}
                 >
                     <View style={styles.scoreSubcontainer}>
-                    <TouchableOpacity
-                        style={[styles.scoreTextContainer, {backgroundColor: containerBackgroundColor}]}
-                        onPress={() => {
-                            if (scoreTooltip) this.setState({modalOpen: !this.state.modalOpen})
-                        }}
-                    >
-                        <View style={styles.loaderContainer}>
-                            <Animated.View style={[
-                                styles.loaderIcon, {
-                                    display: loading === true ? "flex" : "none",
-                                    opacity: this.state.loaderOpacity,
-                                    transform: [
-                                        {scale: this.state.loaderScale}
-                                    ]
-                                }
-                            ]}/>
+                        <View style={[styles.scoreTextContainer]}>
+                            <TouchableOpacity
+                                style={[styles.scoreTextSubcontainer, {backgroundColor: containerBackgroundColor}]}
+                                onPress={() => {
+                                    if (scoreTooltip) this.setState({modalOpen: !modalOpen})
+                                }}
+                            >
+                                <View style={styles.loaderContainer}>
+                                    <Animated.View style={[
+                                        styles.loaderIcon, {
+                                            display: loading === true ? "flex" : "none",
+                                            opacity: loaderOpacity,
+                                            transform: [
+                                                {scale: loaderScale}
+                                            ]
+                                        }
+                                    ]}/>
+                                </View>
+                                {strengthDesc}
+                            </TouchableOpacity>
+                            <Animated.View style={[styles.scorePulser, {
+                                display: highlightStrengthBubble === true &&
+                                    loading === false && password && password.length > minLength &&
+                                    score < 4 ? "flex" : "none",
+                                position: highlightStrengthBubble === true &&
+                                    loading === false && password && password.length > minLength &&
+                                    score < 4 ? "absolute" : "relative",
+                                backgroundColor: containerBackgroundColor,
+                                opacity: pulseOpacity,
+                                transform: [{scaleX: pulseScaleX}, {scaleY: pulseScaleY}]
+                            }]}/>
                         </View>
-                        {strengthDesc}
-                    </TouchableOpacity>
                     </View>
                 </Tooltip>
                 <TouchableOpacity onPress={this.toggleShowPassword} style={styles.showPasswordContainer}>
-                    {!!password && this.state.showPassword && this.getHidePasswordIcon()}
-                    {!!password && !this.state.showPassword && this.getShowPasswordIcon()}
+                    {!!password && showPassword && this.getHidePasswordIcon()}
+                    {!!password && !showPassword && this.getShowPasswordIcon()}
                 </TouchableOpacity>
             </View>
             <Animated.View style={[styles.scoreUnderline,
-                {width: this.state.strengthBarWidth, backgroundColor: barBackgroundColor}]}/>
+                {width: strengthBarWidth, backgroundColor: barBackgroundColor}]}/>
         </View>;
     }
 }
@@ -528,10 +598,9 @@ const styles = {
     main: {
         justifyContent: "center"
     },
-    wrapperElement: {
-    },
+    wrapperElement: {},
     input: {
-        paddingRight: 177,
+        paddingRight: 190,
     },
     scoreContainer: {
         position: "absolute",
@@ -551,25 +620,41 @@ const styles = {
     },
     scoreTextContainer: {
         alignSelf: "flex-end",
-        padding: 4,
+    },
+    scoreTextSubcontainer: {
+        height: 28,
+        padding: 1,
+        paddingRight: 4,
+        borderRadius: 14,
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 10,
+        zIndex: 2
     },
     scoreText: {
-        fontSize: 12,
+        fontSize: 13,
+        //paddingTop: 1,
         fontWeight: "bold",
         color: "white",
-        right: 0,
         textAlign: "center",
-        backgroundColor: "transparent"
+        backgroundColor: "transparent",
+        position: "relative",
+        top: Platform.OS === 'ios' ? 0 : -1
     },
     scoreUnderline: {
         position: "absolute",
         bottom: -4,
         height: 4,
+    },
+    scorePulser: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        borderRadius: 14,
+        zIndex: -2,
     },
     eyeIcon: {
         width: 24,
@@ -578,16 +663,24 @@ const styles = {
     warningIcon: {
         position: "relative",
         top: -1,
-        width: 14,
-        height: 14
+        width: 17,
+        height: 18,
     },
     infoIcon: {
-        width: 15,
-        height: 15
+        width: 26,
+        height: 26,
+    },
+    infoHighlightIcon: {
+        position: "absolute",
+        left: -15,
+        width: 30,
+        height: 30,
+        borderRadius: 30,
+        backgroundColor: "#333"
     },
     loaderContainer: {
         position: "absolute",
-        top: -16,
+        top: -6,
         right: 20,
     },
     loaderIcon: {

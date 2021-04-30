@@ -1,12 +1,12 @@
 import React from 'react';
 import {StyleSheet, Text, View, TextInput, SafeAreaView} from 'react-native';
-import {Item, Label, Input, Icon} from 'native-base';
+import {Item, Label, Input, Icon, Content} from 'native-base';
 import Enzoic from '@enzoic/enzoic-react-native-password-strength';
 
 export default function App() {
     return (
-        <SafeAreaView flex>
-            <View style={styles.container}>
+        <SafeAreaView style={{display: "flex", flex: 1}}>
+            <Content contentContainerStyle={styles.container}>
                 <Text style={styles.title}>React Password Strength Tool</Text>
                 <Enzoic style={{width: "100%", paddingHorizontal: 10, height: 50, borderWidth: 1, borderColor: "#aaa"}}
                         placeholder={"New Password"}
@@ -28,12 +28,12 @@ export default function App() {
                         wrapperElement={Item}
                         wrapperElementProps={{floatingLabel: true, underline: true}}
                         insertedElements={<Label key="label">Password</Label>}
-                        scoreContainerOffset={-7}
+                        scoreContainerOffset={-9}
                         language={"es"}
                         showPasswordIconOverride={<Icon name="eye" style={{color: "blue", fontSize: 24}} />}
                         hidePasswordIconOverride={<Icon name="eye-off" style={{color: "blue", fontSize: 24}} />}
                 />
-            </View>
+            </Content>
         </SafeAreaView>
     );
 }

@@ -120,6 +120,10 @@ to prevent these from being used as part of user passwords.
 
 - By default the component will use a dark gray eye image for the hide plaintext password icon.  This allows you to pass in an element to override it.  For example, you may pass in an Icon from the iconset you are using or an alternate Image.  You will need to size it appropriately (45x45).
 
+#### highlightStrengthBubble
+
+- When true, pulses the strength bubble whenever it is clickable to better call attention to it from the user.  CLicking the strength bubble provides more information when a password is weak or compromised.
+
 ### Acknowledgements
 
 This library is based heavily on the [react-password-strength library](https://github.com/mmw/react-password-strength)
