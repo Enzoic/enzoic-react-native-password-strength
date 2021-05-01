@@ -3,6 +3,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "ios-iphone-se": "react-native run-ios --simulator=\"iPhone SE\"",
     "web": "expo start --web",
     "start": "react-native start",
     "test": "jest"

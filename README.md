@@ -34,9 +34,45 @@ Using CommonJS require:
 
 ### Props
 
-#### style
 
-- Style object to customize container
+#### changeCallback
+
+- Callback after input has changed (and score was recomputed)
+- React Native Password Strength passes two objects to the callback function:
+    - current app state (`score`, `password`, `isValid`)
+    - full result produced by [zxcvbn](https://github.com/dropbox/zxcvbn) including `feedback` (see docs for more properties)
+
+#### defaultValue
+
+- A default value to set for the password field. If a non-empty string is provided the `changeCallback` will be called in `componentDidMount`.
+ 
+#### hidePasswordIconOverride
+
+- By default the component will use a dark gray eye image for the hide plaintext password icon.  This allows you to pass in an element to override it.  For example, you may pass in an Icon from the iconset you are using or an alternate Image.  You will need to size it appropriately (45x45).
+
+#### highlightStrengthBubble
+
+- When true, pulses the strength bubble whenever it is clickable to better call attention to it from the user.  CLicking the strength bubble provides more information when a password is weak or compromised.
+
+#### inputComponent
+
+- Optionally provide a different input component than the React Native default TextInput to use.
+
+#### inputProps
+
+- Additional props to apply to the input element.
+
+#### inputStyles
+
+- Style object for the input element.
+
+#### insertedElements
+
+- Additional elements to be inserted inside the wrapper element.
+
+#### language
+
+- An ISO 639-1 language code for which language to display strings in.  Currently supported: English (en), French (fr), Spanish (es), German (de), Portuguese (pt), and Italian (it).
 
 #### minLength (Default: 8)
 
@@ -56,45 +92,34 @@ Using CommonJS require:
 - Scores of 0-3 will have a hover popup available indicating reasons for the score and suggestions to improve it.
 - Scores 4-5 (Strong, Very Strong) will not have a popup value
 
+#### scoreContainerOffset
+
+- By default the score container (e.g. Strong, Weak, etc.) is vertically centered in the input element.  You can provide a positive or negative offset value to move it up or down.
+
 #### scoreWords (Default: ['Hacked', 'Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'])
 
 - An array denoting the words used to describe respective score values in the UI
+
+#### showPasswordIconOverride
+
+- By default the component will use a dark gray eye image for the show plaintext password icon.  This allows you to pass in an element to override it.  For example, you may pass in an Icon from the iconset you are using or an alternate Image.  You will need to size it appropriately (45x45).
+
+#### style
+
+- Style object to customize container
+
+#### tooltipPlacement
+
+- Controls where the strength tooltip shows when the strength bubble is touched for more information.  Possible values: "top", "bottom", "right", "left".  Defaults to "top".
 
 #### tooShortWord (Default: 'Too Short')
 
 - A string to describe when password is too short (based on minLength prop).
 
-#### changeCallback
-
-- Callback after input has changed (and score was recomputed)
-- React Native Password Strength passes two objects to the callback function:
-    - current app state (`score`, `password`, `isValid`)
-    - full result produced by [zxcvbn](https://github.com/dropbox/zxcvbn) including `feedback` (see docs for more properties)
-
-#### defaultValue
-
-- A default value to set for the password field. If a non-empty string is provided the `changeCallback` will be called in `componentDidMount`.
-
 #### userInputs
 
-- An array of strings that zxcvbn will treat as an extra dictionary.  You can add your product name, company name into this list 
-to prevent these from being used as part of user passwords.
-
-#### language
-
-- An ISO 639-1 language code for which language to display strings in.  Currently supported: English (en), French (fr), Spanish (es), German (de), Portuguese (pt), and Italian (it).
-
-#### inputComponent
-
-- Optionally provide a different input component than the React Native default TextInput to use.
-
-#### inputProps
-
-- Additional props to apply to the input element.
-
-#### inputStyles
-
-- Style object for the input element.
+- An array of strings that zxcvbn will treat as an extra dictionary.  You can add your product name, company name into this list
+  to prevent these from being used as part of user passwords.
 
 #### wrapperElement
 
@@ -104,25 +129,6 @@ to prevent these from being used as part of user passwords.
 
 - Props object for the wrapper element.
 
-#### insertedElements
-
-- Additional elements to be inserted inside the wrapper element.
-
-#### scoreContainerOffset
-
-- By default the score container (e.g. Strong, Weak, etc.) is vertically centered in the input element.  You can provide a positive or negative offset value to move it up or down.
-
-#### showPasswordIconOverride
-
-- By default the component will use a dark gray eye image for the show plaintext password icon.  This allows you to pass in an element to override it.  For example, you may pass in an Icon from the iconset you are using or an alternate Image.  You will need to size it appropriately (45x45).
-
-#### hidePasswordIconOverride
-
-- By default the component will use a dark gray eye image for the hide plaintext password icon.  This allows you to pass in an element to override it.  For example, you may pass in an Icon from the iconset you are using or an alternate Image.  You will need to size it appropriately (45x45).
-
-#### highlightStrengthBubble
-
-- When true, pulses the strength bubble whenever it is clickable to better call attention to it from the user.  CLicking the strength bubble provides more information when a password is weak or compromised.
 
 ### Acknowledgements
 

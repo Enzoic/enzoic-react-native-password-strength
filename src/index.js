@@ -43,7 +43,8 @@ export default class Enzoic extends Component {
         showPasswordIconOverride: PropTypes.element,
         hidePasswordIconOverride: PropTypes.element,
         inputProps: PropTypes.object,
-        highlightStrengthBubble: PropTypes.bool
+        highlightStrengthBubble: PropTypes.bool,
+        tooltipPlacement: PropTypes.string,
     };
 
     static defaultProps = {
@@ -55,7 +56,8 @@ export default class Enzoic extends Component {
         language: "en",
         scoreContainerOffset: -14,
         inputProps: {},
-        highlightStrengthBubble: true
+        highlightStrengthBubble: true,
+        tooltipPlacement: "top"
     };
 
     state = {
@@ -74,6 +76,7 @@ export default class Enzoic extends Component {
         pulseScaleY: new Animated.Value(1),
         pulseOpacity: new Animated.Value(0.6),
         showPassword: false,
+        scoreContainerWidth: 190
     };
 
     constructor(props) {
@@ -492,7 +495,7 @@ export default class Enzoic extends Component {
         } = this.state;
         const {
             style, onChangeText, inputProps, scoreContainerOffset, placeholder, minLength, highlightStrengthBubble,
-            inputStyles, inputComponent, wrapperElement, wrapperElementProps
+            inputStyles, inputComponent, wrapperElement, wrapperElementProps, tooltipPlacement
         } = this.props;
 
         const containerBackgroundColor = this.getBackgroundColor(password, loading, score, false);
@@ -518,7 +521,7 @@ export default class Enzoic extends Component {
                 React.createElement(inputComponent || TextInput, {
                     ...inputProps,
                     key: "input",
-                    style: [styles.input, inputStyles],
+                    style: [styles.input, inputStyles, {paddingRight: this.state.scoreContainerWidth + 15}],
                     placeholder: placeholder,
                     type: "password",
                     secureTextEntry: !showPassword,
@@ -530,12 +533,14 @@ export default class Enzoic extends Component {
                     },
                     value: password,
                 }))}
-            <View style={[styles.scoreContainer, {marginTop: scoreContainerOffset}]}>
+            <View style={[styles.scoreContainer,
+                {marginTop: scoreContainerOffset, display: password && password.length ? "flex" : "none"}]}
+                onLayout={(event) => this.setState({scoreContainerWidth: event.nativeEvent.layout.width })}>
                 <Tooltip
                     backgroundColor="#000000aa"
-                    isVisible={modalOpen === true}
+                    isVisible={modalOpen}
                     content={scoreTooltip}
-                    placement="top"
+                    placement={tooltipPlacement}
                     onClose={() => this.setState({modalOpen: false})}
                 >
                     <View style={styles.scoreSubcontainer}>
@@ -546,10 +551,9 @@ export default class Enzoic extends Component {
                                     if (scoreTooltip) this.setState({modalOpen: !modalOpen})
                                 }}
                             >
-                                <View style={styles.loaderContainer}>
+                                <View style={[styles.loaderContainer, {display: loading === true ? "flex" : "none"}]}>
                                     <Animated.View style={[
                                         styles.loaderIcon, {
-                                            display: loading === true ? "flex" : "none",
                                             opacity: loaderOpacity,
                                             transform: [
                                                 {scale: loaderScale}
@@ -589,9 +593,7 @@ const styles = {
         justifyContent: "center"
     },
     wrapperElement: {},
-    input: {
-        paddingRight: 190,
-    },
+    input: {},
     scoreContainer: {
         position: "absolute",
         top: "50%",
@@ -599,14 +601,12 @@ const styles = {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        width: 169
     },
     showPasswordContainer: {
         marginLeft: 10,
         width: 24
     },
     scoreSubcontainer: {
-        width: 135,
     },
     scoreTextContainer: {
         alignSelf: "flex-end",
@@ -669,15 +669,16 @@ const styles = {
         backgroundColor: "#333"
     },
     loaderContainer: {
-        position: "absolute",
-        top: -6,
-        right: 20,
+        width: 82,
     },
     loaderIcon: {
         backgroundColor: "#333",
         width: 40,
         height: 40,
-        borderRadius: 40
+        borderRadius: 40,
+        position: "absolute",
+        right: 20,
+        top: -20
     },
     tooltipTitle: {
         position: "relative",

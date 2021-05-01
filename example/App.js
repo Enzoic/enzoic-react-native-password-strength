@@ -13,6 +13,7 @@ export default function App() {
                         inputStyles={{fontSize: 17}}
                         showPasswordIconOverride={<Icon name="eye" style={{color: "blue", fontSize: 24}} />}
                         hidePasswordIconOverride={<Icon name="eye-off" style={{color: "blue", fontSize: 24}} />}
+                        tooltipPlacement={"bottom"}
                 />
 
                 <Text style={styles.subtitle}>Password Input with Default Value</Text>
@@ -43,7 +44,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: 20,
     },
     title: {
